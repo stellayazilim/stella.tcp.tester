@@ -1,0 +1,124 @@
+﻿<Window x:Class="stella.socket.tester.MainWindow"
+        MinWidth="960"
+
+        Style="{StaticResource MaterialDesignWindow}"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:stella.socket.tester"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:viewModels="clr-namespace:stella.socket.tester.ViewModels"
+        TextElement.Foreground="{DynamicResource MaterialDesign.Brush.Foreground}"
+        Background="{DynamicResource MaterialDesign.Brush.Background}"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
+        >
+    <Border>
+        
+        <Grid>
+            <Grid.RowDefinitions >
+                <RowDefinition Height="0"></RowDefinition>
+                <RowDefinition Height="94"/>
+                <RowDefinition Height="1"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+           
+            <materialDesign:Card Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="16,16, 16, 16" Padding="8" >
+                <StackPanel Orientation="Horizontal" >
+                    <ComboBox HorizontalAlignment="Left" 
+                              VerticalAlignment="Center" 
+                              SelectedItem="{Binding Path=ListenType}"
+                              ItemsSource="{Binding Path=ListenTypes}"  Width="120"  Margin="0,0,16,0" >
+                       
+                    </ComboBox>
+                    <TextBox 
+                        Text="{
+                        Binding Host, 
+                        Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True}"
+                        HorizontalAlignment="Left" VerticalAlignment="Center" materialDesign:HintAssist.Hint="Host"  Width="200" Margin="0,0,16,0" />
+                    <TextBox 
+                        Text="{
+                        Binding Port, 
+                        Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True}"
+                        HorizontalAlignment="Left" VerticalAlignment="Center"  materialDesign:HintAssist.Hint="Port" Width="90" Margin="0,0,16,0"></TextBox>
+                    <Button 
+                        
+                        Command="{Binding ConnectCommandCommand}"
+                        HorizontalAlignment="Left" VerticalAlignment="Center"  Content="Connect">
+                        
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding SelectedItemChangedCommand}"  CommandParameter="{Binding ElementName=clientslw, Path=SelectedItem}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+                    
+                    <Button 
+                        Margin="16,0,0,0"
+                        Command="{Binding DisconnectCommandCommand}"
+                        
+                        HorizontalAlignment="Left" VerticalAlignment="Center"  Content="Disconnect">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding SelectedItemChangedCommand}"  CommandParameter="{Binding ElementName=clientslw, Path=SelectedItem}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+                </StackPanel>
+            </materialDesign:Card>
+    
+          
+        
+            <materialDesign:Card  Grid.Row="3"  Grid.Column="0" Margin="16,16, 16, 16" Padding="8">
+                <ListView Name="clientslw" ItemsSource="{Binding Clients}" DisplayMemberPath="Addr"  SelectedValuePath="{Binding CurrentClient}"  >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding SelectedItemChangedCommand}"  CommandParameter="{Binding ElementName=clientslw, Path=SelectedItem}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ListView>
+            </materialDesign:Card>
+            
+            
+            <materialDesign:Card Grid.Row="3" Grid.Column="1" Margin="16" Padding="8"></materialDesign:Card>
+            
+            
+            <materialDesign:Card   Margin="16" Padding="8" Grid.Row="3" Grid.Column="2">
+                
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition  Height="*"/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="120" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox  AcceptsReturn="True" Text="{Binding Data, UpdateSourceTrigger=PropertyChanged}"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"></TextBox>
+                    <ComboBox BorderThickness="0" Grid.Row="1" Grid.Column="0">
+                        <ComboBoxItem IsSelected="True">Text</ComboBoxItem>
+                        <ComboBoxItem>Binary</ComboBoxItem>
+                        <ComboBoxItem>Bytes</ComboBoxItem>
+                    </ComboBox>
+                
+                    <Button Command="{Binding SendCommand}" Grid.Row="1" Margin="16,0,0,0" Grid.Column="1">Gonder</Button>
+                </Grid>
+            </materialDesign:Card>
+           
+        </Grid>
+        
+    </Border>
+   
+</Window>
